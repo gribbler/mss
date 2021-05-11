@@ -11,6 +11,7 @@ import TariffStore from '@/store/tariff';
 import CategoryStore from '@/store/category';
 import OrderStore from '@/store/orders';
 import FeaturedStore from '@/store/featured';
+import Deliverystore from '@/store/deliveryarea';
 
 const vuexLocal = new VuexPersistence({
   storage: window.localStorage,
@@ -32,6 +33,7 @@ export default new Vuex.Store({
     tariffStore: TariffStore,
     categoryStore: CategoryStore,
     featuredStore: FeaturedStore,
+    deliveryareaStore: Deliverystore,
   },
 
   // This plugin automatically make the data from stores persist by saving it into local storage.

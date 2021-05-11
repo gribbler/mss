@@ -1,8 +1,10 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Home from '@/views/Home.vue';
+import DeliveryArea from '@/components/deliveryarea/DeliveryAreaPage.vue'
 import Checkout from '@/components/checkout/Checkout.vue';
-import MainPage from '@/components/homepage/MainPage.vue';
+import CatalogPage from '@/components/homepage/CatalogPage.vue';
+import ManagementPage from '@/components/homepage/ManagementPage.vue';
 import Login from '@/views/Login.vue';
 import AdminPage from '@/components/adminpage/adminPage.vue';
 import TariffPage from '@/components/tariffpage/tariffpage.vue';
@@ -30,12 +32,25 @@ const router = new Router({
       children: [
         {
           path: '/',
-          component: MainPage
+          component: ManagementPage
         },
         {
           path: 'catalog',
           name: 'catalog',
-          component: MainPage
+          component: CatalogPage,
+          meta: {
+            SUPERADMIN: true
+          }
+        },
+        {
+          path: 'management',
+          name: 'management',
+          component: ManagementPage
+        },
+        {
+          path: 'deliveryareas',
+          name: 'deliveryareas',
+          component: DeliveryArea
         },
 
         {
@@ -64,19 +79,12 @@ const router = new Router({
           component: CategoryPage,
           meta: {
             SUPERADMIN: true,
-            CATEGORIES_VIEW: true,
-            CATEGORIES_MANAGE: true
           }
         },
 
         {
           path: '/orders',
           component: OrdersComponent,
-          meta: {
-            SUPERADMIN: true,
-            ORDER_VIEW: true,
-            ORDER_MANAGE: true
-          },
           children: [
             {
               path: '/',
@@ -96,9 +104,6 @@ const router = new Router({
           component: Featured,
           meta: {
             SUPERADMIN: true,
-            FEATURED_VIEW: true,
-            FEATURED_MANAGE: true,
-            FEATURED_PREVIEW: true
           }
         },
 

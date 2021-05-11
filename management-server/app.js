@@ -37,6 +37,7 @@ import catalogRouter from './routes/catalog';
 import referenceDataRouter from './routes/referenceData';
 import orderRouter from './routes/orders';
 import uiRouter from './routes/ui';
+import deliveryRouter from './routes/delivery';
 
 // Imports for authentication
 import passport from 'passport';
@@ -156,6 +157,7 @@ app.use('/catalog', catalogRouter);
 app.use('/referenceData', referenceDataRouter);
 app.use('/orders', orderRouter);
 app.use('/ui', uiRouter);
+app.use('/deliveryarea', deliveryRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

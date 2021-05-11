@@ -35,9 +35,9 @@
                 <tr
                   v-for="(admin, aind) in admins"
                   v-bind:key="aind"
-                  v-if="admins.length > 0 && admin.name.toUpperCase().includes(query.toUpperCase())"
+                  v-if="admins.length > 0 && admin.userName.toUpperCase().includes(query.toUpperCase())"
                 >
-                  <td>{{admin.name}}</td>
+                  <td>{{admin.userName}}</td>
                   <td>{{admin.email}}</td>
                   <td>
                     <ul class="list-unstyled">
@@ -169,7 +169,7 @@ export default {
     return {
       selected: [],
       user: {
-        name: '',
+        userName: '',
         email: '',
         permissions: [],
         approved: true,

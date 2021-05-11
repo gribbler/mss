@@ -7,7 +7,8 @@ export default {
   namespaced: true,
   state: {
     email: '',
-    name: '',
+    userName: '',
+    zipCode: '',
     isSessionActive: false,
     permissions: []
   },
@@ -24,7 +25,7 @@ export default {
 
         if (res && res.data) {
           commit('setEmail', res.data.email);
-          commit('setName', res.data.name);
+          commit('setName', res.data.userName);
           commit('setSessionActive', true);
         }
 
@@ -47,7 +48,7 @@ export default {
 
         if (res && res.data) {
           commit('setEmail', res.data.email);
-          commit('setName', res.data.name);
+          commit('setName', res.data.userName);
           commit('setSessionActive', true);
           commit('setPermissions', res.data.permissions);
           localStorage.setItem('permissions', res.data.permissions);
@@ -82,7 +83,7 @@ export default {
       });
       if (res && res.data === true) {
         commit('setEmail', localStorage.getItem('email'));
-        commit('setName', localStorage.getItem('name'));
+        commit('setName', localStorage.getItem('userName'));
         commit('setPermissions', localStorage.getItem('permissions').split(','));
         commit('setSessionActive', true);
       } else {
@@ -101,15 +102,15 @@ export default {
     },
 
     setName(state, name) {
-      state.name = name;
-      localStorage.setItem('name', name);
+      state.userName = name;
+      localStorage.setItem('userName', name);
     },
 
     setSessionActive(state, val) {
       state.isSessionActive = val;
       if (!val) {
         localStorage.removeItem('email');
-        localStorage.removeItem('name');
+        localStorage.removeItem('userName');
         localStorage.removeItem('permissions');
       }
     },
@@ -117,16 +118,16 @@ export default {
     logout(state) {
       state.isSessionActive = false;
       state.permissions = [];
-      state.name = '';
+      state.userName = '';
       state.email = '';
       localStorage.removeItem('email');
-      localStorage.removeItem('name');
+      localStorage.removeItem('userName');
       localStorage.removeItem('permissions');
     }
   },
   getters: {
     getName(state) {
-      return state.name;
+      return state.userName;
     },
 
     getEmail(state) {
@@ -134,7 +135,7 @@ export default {
     },
 
     getFirstName(state) {
-      return state.name.split(' ')[0];
+      return state.userName.split(' ')[0];
     },
 
     isSessionActive(state) {

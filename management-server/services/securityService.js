@@ -58,6 +58,46 @@ export default {
             return result;
         }
     },
+    async SignUp(userData){
+        let result = {};
+        try {
+            console.log(userData);
+            let user = new User({
+                userName: userData.name,
+                contactName: userData.cName,
+                contactPhone: userData.phone,                
+                email: userData.email,
+                contactAddress1: userData.cAddress1,
+                contactAddress2: userData.cAddress2,
+                City: userData.city,
+                State: userData.state,
+                zipCode: userData.zipcode,
+                password: cryptoGen.createPasswordHash(userData.password),
+                permissions: userData.permissions?userData.permissions:'VENDOR',
+                approved: false,
+                passwordResetToken: await cryptoGen.generateRandomToken(),
+                passwordResetExpires: new Date(Date.now() + (30 * 24 * 60 * 60 * 1000))
+            });
+
+            user = await user.save();
+            if (!user) {
+                result = {httpStatus: httpStatus.BAD_REQUEST, status: "failed", errorDetails: httpStatus.getStatusText(httpStatus.BAD_REQUEST)};
+                return result;
+            }
+
+            // If we have gotten here, the request must be successful, so respond accordingly
+            logger.info("A new user has signed up", {meta: user});
+            // emailService.emailEmailConfirmationInstructions(user.email, user.name, user.emailConfirmationToken)
+            let responseObj = {email: user.email, name: user.name};
+            result = {httpStatus: httpStatus.OK, status: "successful", responseData: responseObj}
+            return result;
+        }
+        catch(err) {
+            logger.error("Error in signup Service", {meta: err});
+            result = {httpStatus: httpStatus.BAD_REQUEST, status: "failed", errorDetails: err};
+            return result;
+        }
+    },
 
     async resetPassword(token, newPassword) {
         let result = {};

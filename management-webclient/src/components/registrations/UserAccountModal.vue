@@ -98,6 +98,7 @@ export default {
           text:
             'User successfully created. Please check your inbox to confirm email',
         });
+        this.activePanel = 'login';
       } catch (err) {
         this.$notify({
           group: 'all',

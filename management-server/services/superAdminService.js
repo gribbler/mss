@@ -41,7 +41,7 @@ export default {
     async getAllAdmins() {
         let result = {};
         try {
-            let users = await User.find({}, '-_id email name permissions approved').exec();
+            let users = await User.find({}, '-_id email userName permissions approved').exec();
             result = {httpStatus: httpStatus.OK, status: "successful", responseData: users};
             return result;
         }

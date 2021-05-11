@@ -9,30 +9,30 @@ router.get('/', function(req, res, next) {
     res.render('index', { title: 'Veniqa Orders' });
 });
 
-router.post('/orderList', passportAuth.canViewOrders, orderController.getOrderList);
+router.post('/orderList', orderController.getOrderList);
 
-router.get('/order', passportAuth.canViewOrders, orderController.getOrderDetails);
+router.get('/order', orderController.getOrderDetails);
 
-router.post('/confirmOrder', passportAuth.canManageOrders, orderController.confirmOrder);
+router.post('/confirmOrder',  orderController.confirmOrder);
 
-router.post('/cancelOrder', passportAuth.canManageOrders, orderController.cancelOrder);
+router.post('/cancelOrder', orderController.cancelOrder);
 
-router.post('/markItemAsFulfilling', passportAuth.canManageOrders, orderController.markItemAsFulfilling);
+router.post('/markItemAsFulfilling', orderController.markItemAsFulfilling);
 
-router.post('/markItemAsShipped', passportAuth.canManageOrders, orderController.markItemAsShipped);
+router.post('/markItemAsShipped', orderController.markItemAsShipped);
 
-router.post('/markItemAsDelivered', passportAuth.canManageOrders, orderController.markItemAsDelivered);
+router.post('/markItemAsDelivered', orderController.markItemAsDelivered);
 
-router.put('/updateOrderFulfillmentDetails', passportAuth.canManageOrders, orderController.updateOrderFulfillmentDetails);
+router.put('/updateOrderFulfillmentDetails', orderController.updateOrderFulfillmentDetails);
 
-router.put('/updateShipmentDetails', passportAuth.canManageOrders, orderController.updateShipmentDetails);
+router.put('/updateShipmentDetails', orderController.updateShipmentDetails);
 
-router.put('/updateDeliveryDetails', passportAuth.canManageOrders, orderController.updateDeliveryDetails);
+router.put('/updateDeliveryDetails', orderController.updateDeliveryDetails);
 
-router.post('/addComment', passportAuth.canManageOrders, orderController.addComment);
+router.post('/addComment', orderController.addComment);
 
-router.put('/editComment', passportAuth.canManageOrders, orderController.editComment);
+router.put('/editComment', orderController.editComment);
 
-router.delete('/deleteComment', passportAuth.canManageOrders, orderController.deleteComment);
+router.delete('/deleteComment', orderController.deleteComment);
 
 module.exports = router;

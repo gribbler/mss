@@ -1,4 +1,3 @@
-// src/pages/Admin/Products
 <template>
   <div class="col-md-12">
     <div v-if="!isAddView">
@@ -6,7 +5,7 @@
         <header class="card-header">
           <div class="row">
             <div class="col-3">
-              <h4 class="card-title mt-2">Catalog</h4>
+              <h4 class="card-title mt-2">Product Catalog</h4>
             </div>
 
             <div class="col-9 align-right">
@@ -14,7 +13,6 @@
                 type="button"
                 class="au-btn au-btn-icon au-btn--green"
                 @click="addProductFunc()"
-                v-if="permissionGranted"
               >+ Add Catalog</button>
             </div>
           </div>
@@ -43,20 +41,13 @@
           </b-row>
           <div>
             <div class="row">
-              <div class="col-sm align-left">
+              <div class="col-sm-6 align-left">
                 <input
                   class="form-control"
                   v-model="query"
                   type="text"
                   placeholder="Search Catalogs"
                 >
-              </div>
-              <div class="col-sm align-right">Show Inactive First
-                <toggle-button
-                  v-model="showInactiveFirst"
-                  :labels="{checked: 'Yes', unchecked: 'No'}"
-                  @change="sortByInactive()"
-                />
               </div>
             </div>
           </div>
@@ -68,9 +59,8 @@
                 <th>Name</th>
 
                 <th>SKU</th>
-                <th>Price</th>
-                <th>Vendor</th>
-                <th>Status</th>
+                <th>Best Price</th>
+                <th>In Stock</th>
                 <th></th>
                 <th></th>
               </tr>
@@ -90,21 +80,17 @@
                 </td>
 
                 <td>{{product.name}}</td>
-                <td>{{product.store_sku}}</td>
-                <td>$ {{product.price.amount}}</td>
+                <td>{{product.store_sku?product.store_sku:'11111'}}</td>
+                <td>$ {{ getBestPrice(product._id) }}</td>
 
-                <td>{{product.store}}</td>
+                <td>{{ getInStock(product._id) }}</td>
                 <td>
-                  <span v-if="product.active">Active</span>
-                  <span v-else>Inactive</span>
-                </td>
-                <td>
-                  <a @click="editProductFunc(product._id)" v-if="permissionGranted">
+                  <a @click="editProductFunc(product._id)" >
                     <i class="fa fa-edit" style="color:green"></i>
                   </a>
                 </td>
                 <td>
-                  <a @click="deleteProduct(product._id)" v-if="permissionGranted">
+                  <a @click="deleteProduct(product._id)">
                     <i class="fa fa-trash" style="color:red"></i>
                   </a>
                 </td>
@@ -124,18 +110,17 @@
         <!-- card-body end .// -->
       </div>
     </div>
-    <add-product v-if="isAddView" @cancelTrigger="isAddView=false" :data="editProductData"/>
+    <add-catalog v-if="isAddView" @cancelTrigger="isAddView=false" :data="editProductData"/>
   </div>
 </template>
 
 <script>
-import AddProduct from '@/components/homepage/AddProduct.vue';
-import Permission from '@/constants/permissions';
+import AddCatalog from '@/components/homepage/AddCatalog.vue';
 import { mapGetters } from 'vuex';
 
 export default {
   components: {
-    AddProduct,
+    AddCatalog,
   },
   data() {
     return {
@@ -159,16 +144,7 @@ export default {
       return this.$store.getters['adminStore/allProducts'];
     },
 
-    permissionGranted() {
-      if (this.permissions.indexOf(Permission.SUPERADMIN) >= 0) return true;
-      return (
-        this.permissions
-        && this.permissions.indexOf(Permission.ORDER_MANAGE) >= 0
-      );
-    },
-
     ...mapGetters({
-      permissions: 'authStore/permissions',
       pagination: 'adminStore/pagination',
     }),
   },
@@ -178,15 +154,9 @@ export default {
       await this.$store.dispatch('adminStore/getAllProducts');
     },
 
-    async sortByInactive() {
-      this.$store.commit('adminStore/setSortByInactive', this.showInactiveFirst);
-      await this.$store.dispatch('adminStore/getAllProducts');
-    },
-
     async pageLimitChanged(limit) {
       this.pagination.limit = limit;
       this.pageChanged(1);
-      // await this.$store.dispatch("adminStore/getAllProducts");
     },
     deleteProduct(id) {
       return this.$store.dispatch('adminStore/deleteProduct', id);
@@ -195,7 +165,20 @@ export default {
       this.isAddView = true;
       this.editProductData = null;
     },
-
+    async getBestPrice(id) {
+      return this.$store.dispatch(
+        'adminStore/getBestPrice',
+        id,
+      );
+      // console.log(bestPrice);
+      // return bestPrice.price;
+    },
+    async getInStock(id) {
+      return this.$store.dispatch(
+        'adminStore/getInStock',
+        id,
+      );
+    },
     async editProductFunc(id) {
       const editProductDetails = await this.$store.dispatch(
         'adminStore/getProduct',

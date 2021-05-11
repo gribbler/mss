@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"fe45b5c7d2b342a1bb3a15bc00a198d1","collectionName":"veniqa_price_products"}

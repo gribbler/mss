@@ -84,8 +84,8 @@
         class="align-left">Phone number invalid.</b-form-invalid-feedback>
     </b-form-group>
 
-    <vue-recaptcha @verify="onVerify" @expired="onExpired" :sitekey="recaptchaKey"></vue-recaptcha>
-    <p class="info align-left">Please enter the captcha before loggin in.</p>
+    <!-- <vue-recaptcha @verify="onVerify" @expired="onExpired" :sitekey="recaptchaKey"></vue-recaptcha>
+    <p class="info align-left">Please enter the captcha before loggin in.</p> -->
 
     <div class="modal-bottom"></div>
     <b-btn class="register-button" @click="registerClicked()">Register</b-btn>
@@ -113,7 +113,7 @@ export default {
       name: '',
 
       recaptchaKey: '',
-      captchaResp: ''
+      // captchaResp: ''
     };
   },
 
@@ -137,14 +137,14 @@ export default {
         && this.confirmPasswordState
         && this.phoneState
         && this.nameState
-        && this.captchaResp.length > 0
+        // && this.captchaResp.length > 0
       ) {
         this.$emit('register', {
           email: this.username,
           password: this.password,
           phone: this.phone,
           name: this.name,
-          recaptcha: this.captchaResp
+          // recaptcha: this.captchaResp
         });
       }
     },

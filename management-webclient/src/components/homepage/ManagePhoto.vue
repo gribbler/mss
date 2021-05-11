@@ -325,6 +325,7 @@ export default {
 
           resolve(newObj);
         });
+        // console.log("this is saveall funcion call.");
 
         this.detailedImageUrls = new Array(data.detailedImageUrls.length).fill(
           '',

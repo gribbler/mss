@@ -11,17 +11,21 @@ let getDBConnection = async() => {
             pass: process.env.VENIQA_MONGODB_PASSWORD,
             dbName: process.env.VENIQA_MONGODB_DB,
             useNewUrlParser: config.get('mongodb_settings.use_new_url_parser'),
-            useCreateIndex: config.get('mongodb_settings.use_create_index')
+            useCreateIndex: config.get('mongodb_settings.use_create_index'),
+            useUnifiedTopology: true
         }
 
         // Establish a mongoose connection to mongodb
-        dbConnection = await mongoose.connect(process.env.VENIQA_MONGODB_URL, connectionOptions, (error) => {
-                        if (error) {
-                            logger.error("Could not establish connection to database", {meta: error});
-                            return;
-                        }
-                        logger.info("MongoDB connection was successful");
-                    });
+        mongoose.connect(process.env.VENIQA_MONGODB_URL, connectionOptions, (error) => {
+            if (error) {
+                logger.error("Could not establish connection to database", {meta: error})
+                return;
+            }
+        });
+        dbConnection = mongoose.connection; 
+        dbConnection.once('open',function(){
+        console.log("successfully connected.");
+        });
     }
     catch(err) {
         logger.error("Error connecting to the database", {meta: err});

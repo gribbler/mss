@@ -39,6 +39,17 @@ export default {
         }
     },
 
+    async signup(req, res, next) {
+        let response;
+        try {
+            response = await securityService.SignUp(req.body);
+            return res.status(response.httpStatus).send(response);
+        }
+        catch(err) {
+            logger.error("Error in SignUp Controller", {meta: err});
+            return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({httpStatus: httpStatus.INTERNAL_SERVER_ERROR, status: "failed", errorDetails: err});
+        }
+    },
     login(req, res, next) {
         // If this part gets executed, it means authentication was successful
         // Regenerating a new session ID after the user is authenticated
@@ -48,7 +59,8 @@ export default {
             req.session.save((err) => {
                 res.status(httpStatus.OK).send({
                     email: req.user.email,
-                    name: req.user.name,
+                    userName: req.user.userName,
+                    // contactName: req.user.contactName,
                     permissions: req.user.permissions
                 });
             })

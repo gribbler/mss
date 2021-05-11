@@ -1,5 +1,6 @@
 import config from 'config';
 import Product from '../database/models/product';
+import ProductPrice from '../database/models/productsaleinfo'
 import cryptoGen from '../authentication/cryptoGen';
 import awsConnections from '../cloudservices/awsConnections';
 import httpStatus from 'http-status-codes';
@@ -7,12 +8,162 @@ import axios from 'axios';
 import logger from '../logging/logger';
 
 export default {
+    async searchSaleCatalog(pagingOptions, searchTerm, sortRule) {
+        let result = {};
+        let searchObj = searchTerm ? {$text: {$search: searchTerm}} : {};
+        try {
+            let products = await ProductPrice.paginate(searchObj, {
+                select: '_id productID price inStock inSale deliveryArea vendor',
+                sort: sortRule,
+                page: pagingOptions.page,
+                limit: pagingOptions.limit
+            }).then(result => {
+                return result;
+            }).catch(err => {
+                return err;
+            })
+
+            result = {httpStatus: httpStatus.OK, status: "successful", responseData: products};
+            return result;
+        }   
+        catch(err) {
+            logger.error("Error in searchSaleCatalog Service", {meta: err});
+            result = {httpStatus: httpStatus.BAD_REQUEST, status: "failed", errorDetails: err};
+            return result;
+        }
+    },
+
+    async addSaleProductToCatalog(productObj, userObj){
+        let result = {};
+        try {
+            // find product name.
+            console.log(productObj);
+            let productID = await Product.find({name: productObj.productName}, '_id name',(err, docs)=>{
+                productObj.productID = docs[0]._id;
+            });
+            let duplicates = await ProductPrice.find({productID: productObj.productID, vendor: userObj.userName},'_id productID');
+            if(duplicates.length>0){
+                result = {httpStatus: httpStatus.BAD_REQUEST, status: "failed", errorDetails: httpStatus.getStatusText(httpStatus.BAD_REQUEST)};
+                return result;
+            }
+            let productprice = new ProductPrice(productObj);
+            productprice.vendor = userObj.userName;
+            productprice = await productprice.save();
+
+            // Upload the brand new permanent thumbnail that will be preserved forever, throws error if unsuccessful
+            // await this.uploadPermanentProductThumbnail(product._id, product.thumbnailUrls[0]);
+
+            result = {httpStatus: httpStatus.OK, status: "successful", responseData: productprice};
+            return result;
+        }
+        catch(err) {
+            logger.error("Error in addSaleProductToCatalog Service", {meta: err});
+            result = {httpStatus: httpStatus.BAD_REQUEST, status: "failed", errorDetails: err};
+            return result;
+        }
+    },
+
+    async getSaleProductDetails(productId) {
+        let result = {};
+        try {
+            let productprice = await ProductPrice.findOne({_id: productId}).populate('category tariff').exec();
+            result = productprice ? {httpStatus: httpStatus.OK, status: "successful", responseData: productprice} : {httpStatus: httpStatus.NOT_FOUND, status: "failed", errorDetails: httpStatus.getStatusText(httpStatus.NOT_FOUND)};
+            return result; 
+        }
+        catch(err) {
+            logger.error("Error in getProductDetails Service", {meta: err});
+            result = {httpStatus: httpStatus.BAD_REQUEST, status: "failed", errorDetails: err};
+            return result;
+        }
+    },
+
+    async updateSaleProductInCatalog(productObj, userObj) {
+        let result = {};
+        try {
+            // find product name.
+            let productID = await Product.find({name: productObj.productName}, '_id name',(err, docs)=>{
+                // console.log(docs[0].id);
+                productObj.productID = docs[0]._id;
+            });
+            // Store the id and delete it from the received object, to prevent any accidental replacement of id field
+            let id = productObj._id;
+            if (!id) {
+                result = {httpStatus: httpStatus.BAD_REQUEST, status: "failed", errorDetails: "Missing Product ID"};
+                return result;
+            }
+            delete productObj._id;
+            
+            // Make the update and return the updated document. Also run validators. Mongoose warns only limited validation takes place doing this in update
+            let productprice = await ProductPrice.findOneAndUpdate({_id: id}, productObj, {runValidators: true, new: true}).populate('category tariff').exec();
+            
+            if (!productprice) {
+                result = {httpStatus: httpStatus.BAD_REQUEST, status: "failed", errorDetails: httpStatus.getStatusText(httpStatus.BAD_REQUEST)};
+                return result;
+            }
+
+            result = {httpStatus: httpStatus.OK, status: "successful", responseData: productprice};
+            return result;
+        }
+        catch(err) {
+            logger.error("Error in updateProductInCatalog Service", {meta: err});
+            result = {httpStatus: httpStatus.BAD_REQUEST, status: "failed", errorDetails: err};
+            return result;
+        }
+    },
+
+    async deleteSaleProductFromCatalog(productId){
+        let result = {};
+        try {
+            // Remove the product
+            let productprice = await ProductPrice.remove({_id: productId}).exec();
+
+            // if removal not successful, return failure
+            if (!productprice) {
+                result = {httpStatus: httpStatus.INTERNAL_SERVER_ERROR, status: "failed", errorDetails: httpStatus.getStatusText(httpStatus.INTERNAL_SERVER_ERROR)};
+                return result;
+            }
+
+            result = {httpStatus: httpStatus.OK, status: "successful", responseData: productprice};
+            return result;
+        }
+        catch(err) {
+            logger.error("Error in deleteProductFromCatalog Service", {meta: err});
+            result = {httpStatus: httpStatus.BAD_REQUEST, status: "failed", errorDetails: err};
+            return result;
+        }
+    },
+    async getBestPrice(productID) {
+        let result = {};
+        try {
+            result = {httpStatus: httpStatus.OK, status: "successful", responseData: {message:'BestPrice', price:100}};
+            return result;
+        }   
+        catch(err) {
+            logger.error("Error in getBestPrice Service", {meta: err});
+            result = {httpStatus: httpStatus.BAD_REQUEST, status: "failed", errorDetails: err};
+            return result;
+        }
+    },
+    async getInStock(productID) {
+        let result = {};
+        try {
+            result = {httpStatus: httpStatus.OK, status: "successful", responseData: {message:'BestPrice', stock:80}};
+            return result;
+        }   
+        catch(err) {
+            logger.error("Error in getInStock Service", {meta: err});
+            result = {httpStatus: httpStatus.BAD_REQUEST, status: "failed", errorDetails: err};
+            return result;
+        }
+    },
+
+    //start ysd
     async searchCatalog(pagingOptions, searchTerm, sortRule) {
         let result = {};
         let searchObj = searchTerm ? {$text: {$search: searchTerm}} : {};
         try {
             let products = await Product.paginate(searchObj, {
-                select: '_id name brand store marked_price price thumbnailUrls active',
+                select: '_id name brand store_sku thumbnailUrls',
                 populate: [
                     { path: 'category', select: '-_id category subcategory' }
                 ],
@@ -23,7 +174,8 @@ export default {
                 return result;
             }).catch(err => {
                 return err;
-            })
+            });
+           
             result = {httpStatus: httpStatus.OK, status: "successful", responseData: products};
             return result;
         }   
@@ -39,12 +191,13 @@ export default {
         try {
             let product = new Product(productObj);
             product.auditLog = {
-                createdBy: {email: userObj.email, name: userObj.name},
-                updatedBy: {email: userObj.email, name: userObj.name},
+                createdBy: {email: userObj.email, name: userObj.userName},
+                updatedBy: {email: userObj.email, name: userObj.userName},
                 createdOn: new Date(),
                 updatedOn: new Date()
             }
             product = await product.save();
+            console.log(product);
 
             if (!product) {
                 result = {httpStatus: httpStatus.BAD_REQUEST, status: "failed", errorDetails: httpStatus.getStatusText(httpStatus.BAD_REQUEST)};
@@ -52,7 +205,7 @@ export default {
             }
 
             // Upload the brand new permanent thumbnail that will be preserved forever, throws error if unsuccessful
-            await this.uploadPermanentProductThumbnail(product._id, product.thumbnailUrls[0]);
+            // await this.uploadPermanentProductThumbnail(product._id, product.thumbnailUrls[0]);
 
             result = {httpStatus: httpStatus.OK, status: "successful", responseData: product};
             return result;
@@ -203,6 +356,7 @@ export default {
             return result;
         }
     },
+    //end ysd
 
     async getPresignedUrlsForCatalogImageUploads(productId, numberOfThumbnailAndDetailedImages, numberOfFeaturedImages) {
         let result = {};

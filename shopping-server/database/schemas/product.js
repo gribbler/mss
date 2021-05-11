@@ -107,7 +107,7 @@ let productSchema = new mongoose.Schema({
         required: false
     },
     custom_attributes: {
-        type: Map,
+        type:  ,
         of: String
     },
     details_html: {

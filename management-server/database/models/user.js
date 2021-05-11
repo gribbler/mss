@@ -4,6 +4,18 @@ import config from 'config';
 import ROLES_ARRAY from '../reference-data-files/roles';
 
 let userSchema = new mongoose.Schema({
+    userName:{
+        type: String,
+        required: true
+    },
+    contactName:{
+        type: String,
+        required: true
+    },
+    contactPhone:{
+        type: Number,
+        required: true
+    },
     email: {
         type: String,
         required: true,
@@ -14,14 +26,32 @@ let userSchema = new mongoose.Schema({
             return validator.isEmail(value)
         }
     },
-    password: {
+    contactAddress1:{
         type: String,
         required: true
     },
-    name: {
+    contactAddress2:{
+        type: String,
+        required: true
+    },
+    City:{
+        type: String,
+        required: true
+    },
+    State:{
+        type: String,
+        required: true
+    },
+    zipCode:{
         type: String,
         required: true,
-        trim: true
+        validate: (value) => {
+            return value.length === 5
+        }
+    },
+    password: {
+        type: String,
+        required: true
     },
     approved: {
         type: Boolean,
@@ -31,7 +61,7 @@ let userSchema = new mongoose.Schema({
     permissions: {
         type: [String],
         required: true,
-        enum: ROLES_ARRAY,
+        enum: ['SUPERADMIN', 'VENDOR'],
         validate: (value) => {
             return value.length > 0
         }

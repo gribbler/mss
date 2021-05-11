@@ -2,15 +2,36 @@ import mongoose from 'mongoose';
 import validator from 'validator';
 
 let priceSchema = new mongoose.Schema({
-    amount: {
-        type: Number,
-        required: true
+    Little:{
+        amount: {
+            type: Number,
+            required: true
+        },
+        value: {
+            type: Number,
+            required: true
+        }
     },
-    currency: {
-        type: String,
-        required: true,
-        enum: ['USD', 'BDT', 'NPR']
-    }
+    Normal:{
+        amount: {
+            type: Number,
+            // required: true
+        },
+        value: {
+            type: Number,
+            // required: true
+        }
+    },
+    Many:{
+        amount: {
+            type: Number,
+            // required: true
+        },
+        value: {
+            type: Number,
+            // required: true
+        }
+    },
 }, {_id: false})
 
 module.exports = priceSchema; 

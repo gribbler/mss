@@ -16,52 +16,123 @@
                 alt="Admin"
               />
             </div>
-            <h4 class="name">{{ adminname }}</h4>
-            <a @click="signout()" class="signout">Sign out</a>
           </div>
           <nav class="navbar-sidebar2">
-            <ul class="list-unstyled navbar__list">
+            <ul class="list-unstyled navbar__list" v-if="isSuperAdmin">
+
               <li class="nav-item">
-                <a class="nav-link" @click="navigate('catalog')">
-                  <i class="fas fa-list"></i>
-                  Catalogs
+                <a class="nav-link" >
+                  {{ adminname }}
                 </a>
               </li>
 
-              <li class="nav-item" @click="navigate('orders')" v-if="orderPermissionGranted">
-                <a class="nav-link">
-                  <i class="fas fa-archive"></i>
-                  Orders
+              <li class="nav-item">
+                <a class="nav-link" @click="navigate('management')">
+                  <i class="fas fa-gift"></i>
+                  Product Management
                 </a>
               </li>
-              <li class="nav-item" @click="navigate('featured')" v-if="featuredPermissionGranted">
-                <a class="nav-link">
-                  <font-awesome-icon icon="star" />Featured Posts
+
+              <li class="nav-item">
+                <a class="nav-link" @click="navigate('catalog')">
+                  <i class="fas fa-list"></i>
+                  Product Catalogs
                 </a>
               </li>
-              <li class="nav-item" @click="navigate('adminsetting')" v-if="isSuperAdmin">
-                <a class="nav-link">
-                  <i class="fas fa-users"></i>
-                  Users Setting
-                </a>
-              </li>
-              <li class="nav-item" @click="navigate('tariffsetting')" v-if="tariffViewGranted">
-                <a class="nav-link">
-                  <i class="fa fa-plane"></i>
-                  Tariffs Setting
-                </a>
-              </li>
+
               <li
                 class="nav-item"
                 @click="navigate('categorysetting')"
-                v-if="categoriesViewGranted"
               >
                 <a class="nav-link">
                   <i class="fa fa-th"></i>
                   Categories Setting
                 </a>
               </li>
+
+              <li 
+                class="nav-item"
+                @click="navigate('deliveryareas')"
+              >
+                <a class="nav-link">
+                  <i class="fas fa-map-marked-alt"></i>
+                  Delivery Areas
+                </a>
+              </li>
+
+              <li class="nav-item" @click="navigate('orders')">
+                <a class="nav-link">
+                  <i class="fas fa-archive"></i>
+                  Orders
+                </a>
+              </li>
+
+              <li class="nav-item" @click="navigate('featured')" >
+                <a class="nav-link">
+                  <font-awesome-icon icon="star" />Featured Posts
+                </a>
+              </li>
+
+              <li class="nav-item" @click="navigate('adminsetting')">
+                <a class="nav-link">
+                  <i class="fas fa-users"></i>
+                  Users Setting
+                </a>
+              </li>
+
+              <li class="nav-item" @click="navigate('tariffsetting')">
+                <a class="nav-link">
+                  <i class="fa fa-plane"></i>
+                  Tariffs Setting
+                </a>
+              </li>
+
+              <li class="nav-item" @click="signout()">
+                <a class="signout">
+                  <i class="fas fa-sign-out-alt"></i>
+                  Sign out
+                </a>
+              </li>
             </ul>
+            <ul class="list-unstyled navbar__list" v-else>
+
+              <li class="nav-item">
+                <a class="nav-link" >
+                  {{ adminname }}
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" @click="navigate('management')">
+                  <i class="fas fa-gift"></i>
+                  Product Management
+                </a>
+              </li>
+
+              <li class="nav-item" @click="navigate('orders')">
+                <a class="nav-link">
+                  <i class="fas fa-archive"></i>
+                  Orders
+                </a>
+              </li>
+
+              <li 
+                class="nav-item"
+                @click="navigate('deliveryareas')"
+              >
+                <a class="nav-link">
+                  <i class="fas fa-map-marked-alt"></i>
+                  Delivery Areas
+                </a>
+              </li>
+
+              <li class="nav-item" @click="signout()">
+                <a class="signout">
+                  <i class="fas fa-sign-out-alt"></i>
+                  Sign out
+                </a>
+              </li>
+          </ul>
           </nav>
         </div>
       </aside>
@@ -73,7 +144,7 @@
           <div class="section__content section__content--p30">
             <div class="container-fluid">
               <div class="row">
-                <div class="col-md-6 col-lg-12">
+                <div class="col-lg-12">
                   <div class="statistic__item">
                     <router-view />
                   </div>
@@ -157,7 +228,12 @@ export default {
 /*
     DEMO STYLE
 */
-
+.menu-sidebar2{
+  background-color: #212F3C;
+}
+.name{
+  color: #FFF;
+}
 /* @import './../assets/css/dashboard.css'; */
 @import url('https://fonts.googleapis.com/css?family=Cairo');
 body {

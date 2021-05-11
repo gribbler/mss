@@ -22,4 +22,6 @@ router.route('/validatePasswordResetToken/:token').get(securityController.valida
 
 router.route('/resetPassword').post(securityController.resetPassword);
 
+router.route('/signup').post(securityController.signup);
+
 module.exports = router;

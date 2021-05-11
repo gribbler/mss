@@ -2,11 +2,13 @@
     "mongodb_collections": {
         "admins": "veniqa_admins",
         "curated_products": "veniqa_curated_products",
+        "price_products": "veniqa_price_products",
         "orders": "veniqa_orders",
         "exchange_rates": "veniqa_currency_exchange_rates",
         "tariff_rates": "veniqa_tariff_rates",
         "product_categories": "veniqa_product_categories",
-        "ui_featured_sections": "veniqa_ui_featured_sections"
+        "ui_featured_sections": "veniqa_ui_featured_sections",
+        "delivery_area":"veniqa_delivery_area"
     },
     "mongodb_settings": {
         "use_new_url_parser": true,

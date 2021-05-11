@@ -10,16 +10,30 @@ router.get('/', function(req, res, next) {
 
 router.use(passportAuth.isAuthenticated);
 
-router.post('/search', passportAuth.canViewCatalog, catalogController.searchCatalog);
+router.post('/search', catalogController.searchCatalog);
 
-router.post('/addProduct', passportAuth.canManageCatalog, catalogController.addProductToCatalog);
+router.post('/addProduct', catalogController.addProductToCatalog);
 
-router.get('/getProductDetails', passportAuth.canViewCatalog, catalogController.getProductDetails);
+router.get('/getProductDetails', catalogController.getProductDetails);
 
-router.put('/updateProduct', passportAuth.canManageCatalog, catalogController.updateProductInCatalog);
+router.put('/updateProduct', catalogController.updateProductInCatalog);
 
-router.delete('/deleteProduct', passportAuth.canManageCatalog, catalogController.deleteProductFromCatalog);
+router.delete('/deleteProduct', catalogController.deleteProductFromCatalog);
 
-router.get('/getPresignedUrlsForCatalogImageUploads', passportAuth.canManageCatalog, catalogController.getPresignedUrlsForCatalogImageUploads);
+router.get('/getPresignedUrlsForCatalogImageUploads', catalogController.getPresignedUrlsForCatalogImageUploads);
+//start ysd
+router.post('/salesearch', catalogController.searchSaleCatalog);
 
+router.post('/addSaleProduct', catalogController.addSaleProductToCatalog);
+
+router.get('/getSaleProductDetails', catalogController.getSaleProductDetails);
+
+router.put('/updateSaleProduct', catalogController.updateSaleProductInCatalog);
+
+router.delete('/deleteSaleProduct', catalogController.deleteSaleProductFromCatalog);
+
+router.post('/getBestPrice', catalogController.getBestPrice);
+
+router.post('/getInStock', catalogController.getInStock);
+//end ysd
 module.exports = router;
