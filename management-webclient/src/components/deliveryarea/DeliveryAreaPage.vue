@@ -95,7 +95,7 @@
                   This field cannot be empty
                 </b-form-invalid-feedback>
               </b-form-group>
-              
+
               <!-- Zip Code -->
               <b-form-group horizontal :label-cols="2" label="Delivery ZipCodes">
                 <b-row style="padding-bottom:10px">
@@ -106,12 +106,12 @@
                     <b-btn size="sm" class="btn-danger" @click="deleteZipCode()">Delete ZipCode</b-btn>
                   </b-col>
                 </b-row>
-                <b-row>            
+                <b-row>
                   <b-form-select
                   v-model="selectItems"
                   multiple
                   :select-size="6"
-                  >        
+                  >
                     <option
                       :value="sub"
                       v-for="(sub, sid) in deliveryArea.zipCodes"
@@ -134,8 +134,8 @@
                     @cancel="showAttributes = false"
                     @save="saveZipCode"
                   />
-                </b-modal>          
- 
+                </b-modal>
+
               </b-form-group>
 
               <!-- Delivery Cost -->
@@ -213,8 +213,8 @@
 </template>
 
 <script>
-import AddZipCode from '../homepage/AddZipCode';
 import ZipCodes from 'zipcodes';
+import AddZipCode from '../homepage/AddZipCode';
 
 export default {
   components: {
@@ -222,15 +222,15 @@ export default {
   },
   data() {
     return {
-      selectItems:[],
+      selectItems: [],
       deliveryArea: {
-        areaName:'',
-        zipCodes:[],
-        deliverCost:0,
-        minimumPurchase:0
+        areaName: '',
+        zipCodes: [],
+        deliverCost: 0,
+        minimumPurchase: 0
       },
-      showAttributes:false,
-      fAddDelete:false,
+      showAttributes: false,
+      fAddDelete: false,
       query: '',
       isAddView: false,
       viewOperation: false,
@@ -238,14 +238,14 @@ export default {
   },
   async created() {
     await this.$store.dispatch('deliveryareaStore/getDAreas');
-    this.deliveryArea = {areaName:'', zipCodes:[]};
+    this.deliveryArea = { areaName: '', zipCodes: [] };
   },
   computed: {
     areas() {
       // console.log(this.$store.getters['deliveryareaStore/getDeliveryAreas']);
-      return this.$store.getters['deliveryareaStore/getDeliveryAreas'].sort(function(a, b) {
-        var nameA = a.areaName.toUpperCase(); // ignore upper and lowercase
-        var nameB = b.areaName.toUpperCase(); // ignore upper and lowercase
+      return this.$store.getters['deliveryareaStore/getDeliveryAreas'].sort((a, b) => {
+        const nameA = a.areaName.toUpperCase(); // ignore upper and lowercase
+        const nameB = b.areaName.toUpperCase(); // ignore upper and lowercase
         if (nameA < nameB) {
           return -1;
         }
@@ -257,46 +257,45 @@ export default {
         return 0;
       });
     },
-    nameState(){
+    nameState() {
       return this.deliveryArea.areaName.length > 0;
     },
-    priceState(){
+    priceState() {
       return this.deliveryArea.deliverCost > 0;
     },
-    minimumPurchaseState(){
+    minimumPurchaseState() {
       return this.deliveryArea.minimumPurchase > 0;
     }
   },
   methods: {
     saveZipCode(code) {
-      code.forEach(item =>{
+      code.forEach(item => {
         this.deliveryArea.zipCodes.push(item);
       });
-      //check if there is any duplication in array.
-      let temp = [];
-      this.deliveryArea.zipCodes.forEach(code=>{
+      // check if there is any duplication in array.
+      const temp = [];
+      this.deliveryArea.zipCodes.forEach(code => {
         temp.push(code);
-      })
+      });
       this.deliveryArea.zipCodes = [];
-      temp.forEach(item=>{
-        if($.inArray(item, this.deliveryArea.zipCodes) === -1) this.deliveryArea.zipCodes.push(item);
+      temp.forEach(item => {
+        if ($.inArray(item, this.deliveryArea.zipCodes) === -1) this.deliveryArea.zipCodes.push(item);
       });
       this.showAttributes = false;
     },
-    deleteZipCode(){
-      if(!this.selectItems.length){
+    deleteZipCode() {
+      if (!this.selectItems.length) {
         this.$notify({
           group: 'all',
           type: 'error',
           text: 'You must select one or more zipcodes.',
         });
       }
-      this.selectItems.forEach(item=>{
-        if(this.deliveryArea.zipCodes.indexOf(item)>-1)
-          this.deliveryArea.zipCodes.splice(this.deliveryArea.zipCodes.indexOf(item),1);
+      this.selectItems.forEach(item => {
+        if (this.deliveryArea.zipCodes.indexOf(item) > -1) { this.deliveryArea.zipCodes.splice(this.deliveryArea.zipCodes.indexOf(item), 1); }
       });
     },
-    getAreaName(code){
+    getAreaName(code) {
       return ZipCodes.lookup(code);
     },
     async deleteDeliveryArea(aName) {
@@ -326,37 +325,36 @@ export default {
     },
     handleCancel() {
       this.deliveryArea = {
-        areaName:'',
-        zipCodes:[]
+        areaName: '',
+        zipCodes: []
       };
       this.viewOperation = false;
     },
     async handleAddDeliveryArea() {
       try {
         // console.log(this.deliveryArea);
-        await this.$store.dispatch('deliveryareaStore/addDAreas', this.deliveryArea).then((data)=>{
-          if(data.status == 'success'){
-          this.$notify({
+        await this.$store.dispatch('deliveryareaStore/addDAreas', this.deliveryArea).then((data) => {
+          if (data.status == 'success') {
+            this.$notify({
               group: 'all',
               type: 'success',
               text: data.responseData,
-          });
-          }
-          else{
+            });
+          } else {
             this.$notify({
               group: 'all',
               type: 'error',
               text: data.errorDetails,
-            })
+            });
           }
         });
 
         this.viewOperation = false;
         this.deliveryArea = {
-          areaName:'',
-          zipCodes:[],
-          deliverCost:0,
-          minimumPurchase:0
+          areaName: '',
+          zipCodes: [],
+          deliverCost: 0,
+          minimumPurchase: 0
         };
       } catch (err) {
         this.$notify({
@@ -368,28 +366,27 @@ export default {
     },
     async handleEditDeliveryArea() {
       try {
-        await this.$store.dispatch('deliveryareaStore/editDAreas',  this.deliveryArea).then((data)=>{
-          if(data.status == 'success'){
+        await this.$store.dispatch('deliveryareaStore/editDAreas', this.deliveryArea).then((data) => {
+          if (data.status == 'success') {
             this.$notify({
-                group: 'all',
-                type: 'success',
-                text: data.responseData,
+              group: 'all',
+              type: 'success',
+              text: data.responseData,
             });
-          }
-          else{
+          } else {
             this.$notify({
               group: 'all',
               type: 'error',
               text: data.errorDetails,
-            })
+            });
           }
         });
         this.viewOperation = false;
         this.deliveryArea = {
-          areaName:'',
-          zipCodes:[],
-          deliverCost:0,
-          minimumPurchase:0
+          areaName: '',
+          zipCodes: [],
+          deliverCost: 0,
+          minimumPurchase: 0
         };
       } catch (err) {
         this.$notify({

@@ -50,7 +50,7 @@
                 </a>
               </li>
 
-              <li 
+              <li
                 class="nav-item"
                 @click="navigate('deliveryareas')"
               >
@@ -116,7 +116,7 @@
                 </a>
               </li>
 
-              <li 
+              <li
                 class="nav-item"
                 @click="navigate('deliveryareas')"
               >
@@ -209,7 +209,9 @@ export default {
     },
 
     isSuperAdmin() {
-      return this.permissions && this.permissions.indexOf(Permission.SUPERADMIN) >= 0;
+      // console.log(this.permissions);
+      // return true;
+      return this.permissions === 'SUPERADMIN';
     },
 
     orderPermissionGranted() {

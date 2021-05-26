@@ -18,6 +18,5 @@ else {
     else {
         // Load the .env file from the system location where it is stored
         dotenv.config();
-        // console.log("veniqa env is "+process.env.VENIQA_ENV+"\n node env is "+process.env.NODE_ENV)
     }
 }

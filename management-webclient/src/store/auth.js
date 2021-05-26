@@ -1,7 +1,7 @@
 import ProxyUrls from '@/constants/ProxyUrls';
 import Vue from 'vue';
 import _ from 'lodash';
-import PermissionConsts from '../constants/permissions';
+// import PermissionConsts from '../constants/permissions';
 
 export default {
   namespaced: true,
@@ -10,7 +10,7 @@ export default {
     userName: '',
     zipCode: '',
     isSessionActive: false,
-    permissions: []
+    permissions: ''
   },
   actions: {
     async registerUser({ commit }, payload) {
@@ -117,7 +117,7 @@ export default {
 
     logout(state) {
       state.isSessionActive = false;
-      state.permissions = [];
+      state.permissions = '';
       state.userName = '';
       state.email = '';
       localStorage.removeItem('email');
@@ -146,29 +146,29 @@ export default {
       return state.permissions;
     },
 
-    featuredPermissionGranted(state) {
-      const requiredPerms = [
-        PermissionConsts.FEATURED_MANAGE,
-        PermissionConsts.FEATURED_PREVIEW,
-        PermissionConsts.FEATURED_VIEW,
-        PermissionConsts.SUPERADMIN
-      ];
-      return _.intersection(state.permissions, requiredPerms).length > 0;
-    },
+    // featuredPermissionGranted(state) {
+    //   const requiredPerms = [
+    //     PermissionConsts.FEATURED_MANAGE,
+    //     PermissionConsts.FEATURED_PREVIEW,
+    //     PermissionConsts.FEATURED_VIEW,
+    //     PermissionConsts.SUPERADMIN
+    //   ];
+    //   return _.intersection(state.permissions, requiredPerms).length > 0;
+    // },
 
-    tariffViewGranted(state) {
-      // eslint-disable-next-line max-len
-      const requiredPerms = [PermissionConsts.TARIFF_VIEW, PermissionConsts.TARIFF_MANAGE, PermissionConsts.SUPERADMIN];
-      return _.intersection(state.permissions, requiredPerms).length > 0;
-    },
+    // tariffViewGranted(state) {
+    //   // eslint-disable-next-line max-len
+    //   const requiredPerms = [PermissionConsts.TARIFF_VIEW, PermissionConsts.TARIFF_MANAGE, PermissionConsts.SUPERADMIN];
+    //   return _.intersection(state.permissions, requiredPerms).length > 0;
+    // },
 
-    categoriesViewGranted(state) {
-      const requiredPerms = [
-        PermissionConsts.CATEGORIES_VIEW,
-        PermissionConsts.CATEGORIES_MANAGE,
-        PermissionConsts.SUPERADMIN
-      ];
-      return _.intersection(state.permissions, requiredPerms).length > 0;
-    }
+    // categoriesViewGranted(state) {
+    //   const requiredPerms = [
+    //     PermissionConsts.CATEGORIES_VIEW,
+    //     PermissionConsts.CATEGORIES_MANAGE,
+    //     PermissionConsts.SUPERADMIN
+    //   ];
+    //   return _.intersection(state.permissions, requiredPerms).length > 0;
+    // }
   }
 };

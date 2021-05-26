@@ -59,7 +59,7 @@ let userSchema = new mongoose.Schema({
         default: false
     },
     permissions: {
-        type: [String],
+        type: String,
         required: true,
         enum: ['SUPERADMIN', 'VENDOR'],
         validate: (value) => {

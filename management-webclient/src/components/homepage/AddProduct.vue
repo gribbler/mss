@@ -65,7 +65,7 @@
               size="sm"
               />
             </b-col>
-            <b-col sm="4">            
+            <b-col sm="4">
               <b-form-select
                 id="varies"
                 type="text"
@@ -107,7 +107,7 @@
         <!-- Zip Code -->
         <b-form-group horizontal :label-cols="2" label="Delivery Areas">
           <b-row style="padding-bottom:10px">
-            <b-col sm="8">   
+            <b-col sm="8">
               <b-form-select
                 id="areatoadd"
                 type="text"
@@ -129,12 +129,12 @@
               <b-btn size="sm" class="btn-danger" @click="deleteDeliveryArea()">Delete Delivery Area</b-btn>
             </b-col>
           </b-row>
-          <b-row>            
+          <b-row>
             <b-form-select
             v-model="selectItems"
             multiple
             :select-size="6"
-            >        
+            >
               <option
                 :value="sub"
                 v-for="(sub, sid) in product.deliveryArea"
@@ -181,25 +181,23 @@ import * as _ from 'lodash';
 
 export default {
   name: 'AddProduct',
-  components: {
-  },
   data() {
     return {
       fAddDelete: false,
-      selPrice:'Little',
+      selPrice: 'Little',
       showAttributes: false,
       product: {
         productName: '',
         price: {
-          Little:{
-          value: 0,
-          amount: 0,
-          },
-          Normal:{
+          Little: {
             value: 0,
             amount: 0,
           },
-          Many:{
+          Normal: {
+            value: 0,
+            amount: 0,
+          },
+          Many: {
             value: 0,
             amount: 0,
           }
@@ -209,7 +207,7 @@ export default {
         deliveryArea: [],
       },
       selectItems: [],
-      areaToAdd:''
+      areaToAdd: ''
     };
   },
   props: {
@@ -225,14 +223,8 @@ export default {
     this.selectItems = [];
   },
   computed: {
-    refDeliveryArea(){
+    refDeliveryArea() {
       return this.$store.getters['deliveryareaStore/getDeliveryAreas'];
-      },
-    refuserName() {
-      return this.$store.getters['authStore/getName'];
-    },
-    refzipCode() {
-      return this.$store.getters['adminStore/allVendorData'];
     },
     refproductName() {
       return this.$store.getters['adminStore/allProducts'];
@@ -261,7 +253,7 @@ export default {
       return (this.product.deliveryArea.length > 0);
     },
     filteredPrice() {
-      switch(this.selPrice){
+      switch (this.selPrice) {
         default: case 'Little': return this.product.price.Little;
         case 'Normal': return this.product.price.Normal;
         case 'Many': return this.product.price.Many;
@@ -279,36 +271,13 @@ export default {
         && this.deliveryAreaState
       );
     },
-
-    cancelAttribModal() {
-      this.showAttributes = false;
-    },
-
-    saveZipCode(code) {
-      // console.log(code);
-      code.forEach(item =>{
-        this.product.zipCode.push(item);
-      })
-
-      //check if there is any duplication in array.
-      let temp = [];
-      this.product.zipCode.forEach(code=>{
-        temp.push(code);
-      })
-      this.product.zipCode = [];
-      temp.forEach(item=>{
-        if($.inArray(item, this.product.zipCode) === -1) this.product.zipCode.push(item);
-      });
-      this.showAttributes = false;
-    },
     addDeliveryArea() {
-      if($.inArray(this.areaToAdd, this.product.deliveryArea)===-1)
-        this.product.deliveryArea.push(this.areaToAdd);
+      if ($.inArray(this.areaToAdd, this.product.deliveryArea) === -1) { this.product.deliveryArea.push(this.areaToAdd); }
       console.log(this.areaToAdd);
     },
     deleteDeliveryArea() {
-      this.selectItems.forEach(item=>{
-        this.product.deliveryArea.splice(this.product.deliveryArea.indexOf(item),1);
+      this.selectItems.forEach(item => {
+        this.product.deliveryArea.splice(this.product.deliveryArea.indexOf(item), 1);
       });
     },
     goBack() {
@@ -317,20 +286,44 @@ export default {
     async handleAddProduct() {
       if (!this.validateForm()) return;
       try {
-        await this.$store.dispatch('adminStore/addSaleProduct', this.product);
+        await this.$store.dispatch('adminStore/addSaleProduct', this.product).then(() => {
+          this.$notify({
+            group: 'all',
+            type: 'success',
+            text: 'New data saved successfully.'
+          });
+        }).catch((err) => {
+          this.$notify({
+            group: 'all',
+            type: 'error',
+            text: 'There was an error while saving New data.\n'+err
+          });
+        });
         this.$emit('cancelTrigger');
       } catch (err) {
         this.$notify({
           group: 'all',
           type: 'error',
-          text: 'There was an error while saving data.'
+          text: 'There was an error while saving New data.'
         });
       }
     },
     async handleEditProduct() {
       if (!this.validateForm()) return;
       try {
-        await this.$store.dispatch('adminStore/editSaleProduct', this.product);
+        await this.$store.dispatch('adminStore/editSaleProduct', this.product).then(() => {
+          this.$notify({
+            group: 'all',
+            type: 'success',
+            text: 'Edit data saved successfully.'
+          });
+        }).catch((err) => {
+          this.$notify({
+            group: 'all',
+            type: 'error',
+            text: 'There was an error while saving Edit data.\n'+err
+          });
+        });;
         this.$store.commit('adminStore/resetSaleProducts');
         this.$emit('cancelTrigger');
       } catch (err) {

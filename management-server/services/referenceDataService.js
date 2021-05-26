@@ -1,10 +1,10 @@
 import * as _ from 'lodash';
 import httpStatus from 'http-status-codes';
-import Product from '../database/models/product'
+// import Product from '../database/models/product'
 import ProductCategory from '../database/models/productCategory';
-import Productsaleinfo from '../database/models/productsaleinfo'
+// import Productsaleinfo from '../database/models/productsaleinfo'
 import Tariff from '../database/models/tariffRate';
-import User from '../database/models/user';
+// import User from '../database/models/user';
 import logger from '../logging/logger';
 
 // import STORES_ARRAY from '../database/reference-data-files/stores.json';
@@ -16,21 +16,20 @@ export default {
         let result = {};
         try {
             let catalogBundle = {
-                product: await Product.find({}, '_id productName').exec(),
-                priceProduct: await Productsaleinfo.find({}, '_id productID price inStock deliveryArea vendor').exec(),
-                vendors: await User.find({}, '_id contactName userName zipCode').exec(),
+                // priceProduct: await Productsaleinfo.find({}, '_id productID price inStock deliveryArea vendor').exec(),
+                // vendors: await User.find({}, '_id contactName userName zipCode').exec(),
                 product_categories: await ProductCategory.find({}, '_id category subcategory').exec(),
-                weight_units: WEIGHT_UNITS_ARRAY,
-                tariff_categories: await Tariff.find({}, '_id name').exec()
+                // weight_units: WEIGHT_UNITS_ARRAY,
+                // tariff_categories: await Tariff.find({}, '_id name').exec()
             }
-            if (catalogBundle.vendors && catalogBundle.product_categories && catalogBundle.weight_units && catalogBundle.tariff_categories) {
+            if (catalogBundle.vendors || catalogBundle.product_categories || catalogBundle.weight_units || catalogBundle.tariff_categories) {
                 result = {httpStatus: httpStatus.OK, status: "successful", responseData: catalogBundle};
                 return result;
             }
-            else if (catalogBundle.vendors || catalogBundle.product_categories || catalogBundle.weight_units || catalogBundle.tariff_categories) {
-                result = {httpStatus: httpStatus.PARTIAL_CONTENT, status: "partially_successful", responseData: catalogBundle};
-                return result;
-            }
+            // else if (catalogBundle.vendors || catalogBundle.product_categories || catalogBundle.weight_units || catalogBundle.tariff_categories) {
+            //     result = {httpStatus: httpStatus.PARTIAL_CONTENT, status: "partially_successful", responseData: catalogBundle};
+            //     return result;
+            // }
             else {
                 result = {httpStatus: httpStatus.INTERNAL_SERVER_ERROR, status: "failed", errorDetails: httpStatus.getStatusText(httpStatus.INTERNAL_SERVER_ERROR)};
                 return result;

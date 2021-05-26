@@ -65,15 +65,14 @@
                 <th>Delivery Area</th>
                 <th>Area Size</th>
                 <th v-if="isSuperAdmin()">Vendor</th>
-                <th></th>
-                <th></th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody v-if="products.length > 0">
               <tr
                 v-for="(product, pid) in products"
                 v-bind:key="pid"
-                v-if="(editpermissionGranted(product.vendor)||isSuperAdmin())&&(product.productName.toUpperCase().includes(query.toUpperCase()))"
+                v-if="product.productName.toUpperCase().includes(query.toUpperCase())"
                 >
                 <td>
                   <img
@@ -93,11 +92,11 @@
                 <td>{{product.deliveryArea.length}}</td>
                 <td v-if="isSuperAdmin()">{{product.vendor}}</td>
                 <td >
+                    &nbsp;
                   <a @click="editProductFunc(product._id)" v-if="editpermissionGranted(product.vendor)">
                     <i class="fa fa-edit" style="color:green"></i>
                   </a>
-                </td>
-                <td>
+                    &nbsp;
                   <a @click="deleteProduct(product._id)" v-if="editpermissionGranted(product.vendor)">
                     <i class="fa fa-trash" style="color:red"></i>
                   </a>
@@ -124,7 +123,6 @@
 
 <script>
 import AddProduct from '@/components/homepage/AddProduct.vue';
-import Permission from '@/constants/permissions';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -142,8 +140,8 @@ export default {
   },
   async created() {
     try {
-      await this.$store.dispatch('adminStore/getReferenceData');
       await this.$store.dispatch('adminStore/getAllProducts');
+      // await this.$store.dispatch('adminStore/getReferenceData');
       await this.$store.dispatch('adminStore/getAllSaleProducts');
     } catch (error) {
       this.$router.push('/login');
@@ -151,9 +149,9 @@ export default {
   },
   computed: {
     products() {
-      return this.$store.getters['adminStore/allPriceProducts'].sort(function(a, b) {
-        var nameA = a.productName.toUpperCase(); // ignore upper and lowercase
-        var nameB = b.productName.toUpperCase(); // ignore upper and lowercase
+      return this.$store.getters['adminStore/allPriceProducts'].sort((a, b) => {
+        const nameA = a.productName.toUpperCase(); // ignore upper and lowercase
+        const nameB = b.productName.toUpperCase(); // ignore upper and lowercase
         if (nameA < nameB) {
           return -1;
         }
@@ -163,18 +161,14 @@ export default {
 
         // names must be equal
         return 0;
-      });;
+      });
     },
     getuserName() {
       return this.$store.getters['authStore/getName'];
     },
-    permissionGranted() {
-      if (this.permissions.indexOf(Permission.SUPERADMIN) >= 0) return true;
-      return false;
-    },
 
     ...mapGetters({
-      permissions: 'authStore/permissions',
+      getPermission: 'authStore/permissions',
       pagination: 'adminStore/pagination',
     }),
   },
@@ -195,7 +189,7 @@ export default {
       return false;
     },
     isSuperAdmin() {
-      return this.permissions && this.permissions.indexOf(Permission.SUPERADMIN) >= 0;
+      return this.getPermission === 'SUPERADMIN';
     },
 
     deleteProduct(id) {
@@ -213,9 +207,9 @@ export default {
         id,
       );
       // set product name in priceProduct.
-      let priceProduct = this.$store.getters['adminStore/allProducts'];
+      const priceProduct = this.$store.getters['adminStore/allProducts'];
       for (let i = 0; i < priceProduct.length; i++) {
-        if(priceProduct[i]._id === editProductDetails.productID) {
+        if (priceProduct[i]._id === editProductDetails.productID) {
           editProductDetails.productName = priceProduct[i].name;
         }
       }

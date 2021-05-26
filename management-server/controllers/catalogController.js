@@ -67,7 +67,7 @@ export default {
     async searchSaleCatalog(req, res, next) {
         let response;
         try {
-            response = await catalogService.searchSaleCatalog(req.body.pagingOptions, req.body.searchTerm, req.body.sortRule);
+            response = await catalogService.searchSaleCatalog(req.body.pagingOptions, req.body.searchTerm, req.body.sortRule, req.user);
             return res.status(response.httpStatus).send(response);
         }
         catch(err) {

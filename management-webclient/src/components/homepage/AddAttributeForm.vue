@@ -63,16 +63,15 @@ export default {
   },
 
   created() {
-    this.formValues ={
+    this.formValues = {
       czipcode: ZipCodes.random().zip,
       radius: 0.1,
       czipCodes: [],
-    }
+    };
   },
 
   methods: {
     addAttribute() {
-
       // populate zipcode area.
       this.formValues.czipCodes = ZipCodes.radius(this.formValues.czipcode, this.formValues.radius);
 
@@ -84,7 +83,7 @@ export default {
       }
     },
     resetForm() {
-        this.formValues = {
+      this.formValues = {
         czipcode: ZipCodes.random().zip,
         radius: 0.1,
         czipCodes: [],
@@ -94,7 +93,7 @@ export default {
 
   computed: {
     checkAllStates() {
-        return this.czipcodeState && this.radiusState;
+      return this.czipcodeState && this.radiusState;
     },
 
     czipcodeState() {

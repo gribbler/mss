@@ -42,6 +42,8 @@ export default {
   async created() {
     await this.$store.dispatch('categoryStore/getCategoriesData');
 
+    // console.log(this.$route.query);
+
     this.assignQueryValues(this.$route.query);
   },
 
@@ -88,6 +90,8 @@ export default {
       }
 
       payload.paging = this.paging;
+
+      console.log(payload);
 
       const pageResp = await this.$store.dispatch(
         'searchStore/searchForProduct',

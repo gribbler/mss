@@ -43,16 +43,16 @@ export default {
   data() {
     return {
       ZipCodes: [],
-      deleteItems:[]
+      deleteItems: []
     };
   },
-  props:{
+  props: {
     zips: { required: true, type: Array, default: false },
   },
 
   created() {
-      this.ZipCodes = [];
-      this.deleteItems = [];
+    this.ZipCodes = [];
+    this.deleteItems = [];
   },
   computed: {
     getDeleteItems() {
@@ -65,7 +65,7 @@ export default {
       this.ZipCodes = [];
       this.ZipCodes.push(ZipCode);
     },
-    getAreaName(code){
+    getAreaName(code) {
       return ZipCodes.lookup(code);
     },
     cancel() {
@@ -76,10 +76,10 @@ export default {
       this.ZipCodes.forEach(zipcode => {
         // console.log(zipcode.czipCodes);
         this.$emit('save', zipcode.czipCodes);
-      })
+      });
     },
-    deleteZip(){
-      this.$emit('delete',this.deleteItems);
+    deleteZip() {
+      this.$emit('delete', this.deleteItems);
     }
   }
 };

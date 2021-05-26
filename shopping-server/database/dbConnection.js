@@ -16,16 +16,13 @@ let getDBConnection = async() => {
         }
 
         // Establish a mongoose connection to mongodb
-        mongoose.connect(process.env.VENIQA_MONGODB_URL, connectionOptions, (error) => {
+        dbConnection = await mongoose.connect(process.env.VENIQA_MONGODB_URL, connectionOptions, (error) => {
                         if (error) {
                             logger.error("Could not establish connection to database", {meta: error})
                             return;
                         }
+                        logger.info("MongoDB connection was successful");
                     });
-        dbConnection = mongoose.connection; 
-        dbConnection.once('open',function(){
-            console.log("successfully connected.");
-        });
     }
     catch(err) {
         logger.error("Error connecting to the database", {meta: err})

@@ -25,19 +25,19 @@ export default {
   refData: '/referenceData/getCatalogBundle',
   getProduct: '/catalog/getProductDetails',
   editProduct: '/catalog/updateProduct',
-  getInStock: '/catalog/getInStock',  // ysd
-  getBestPrice: '/catalog/getBestPrice',  // ysd
+  getInStock: '/catalog/getInStock', // ysd
+  getBestPrice: '/catalog/getBestPrice', // ysd
   deleteSaleProduct: '/catalog/deleteSaleProduct', // ysd
   addSaleProduct: '/catalog/addSaleProduct', // ysd
   getSaleProduct: '/catalog/getSaleProductDetails', // ysd
   editSaleProduct: '/catalog/updateSaleProduct', // ysd
 
   // Delivery Areas
-  deliveryareas:'/deliveryarea/getallareas',
+  deliveryareas: '/deliveryarea/getallareas',
   addArea: '/deliveryarea/addArea',
   editArea: '/deliveryarea/editArea',
   deleteArea: '/deliveryarea/deleteArea',
-  
+
   // User settings
   roles: '/referenceData/getRoles',
   allAdmins: '/superAdmin/getAllAdmins',

@@ -40,12 +40,7 @@
                   <td>{{admin.userName}}</td>
                   <td>{{admin.email}}</td>
                   <td>
-                    <ul class="list-unstyled">
-                      <li v-for="(item, iind) in admin.permissions"
-                        v-bind:key="iind">
-                        <span class="badge badge-success">{{item}}</span>
-                      </li>
-                    </ul>
+                    <span class="badge badge-success">{{admin.permissions}}</span>
                   </td>
                   <td>
                     <div v-if="admin.approved">Yes</div>
@@ -108,9 +103,7 @@
                 <label>Admin Roles</label>
                 <b-form-select
                   v-model="user.permissions"
-                  multiple
                   :options="getRoles()"
-                  :select-size="6"
                 ></b-form-select>
               </div>
               <div class="form-group">
@@ -171,7 +164,7 @@ export default {
       user: {
         userName: '',
         email: '',
-        permissions: [],
+        permissions: '',
         approved: true,
       },
       query: '',
@@ -180,7 +173,7 @@ export default {
     };
   },
   async created() {
-    await this.$store.dispatch('userStore/getRoles');
+    // await this.$store.dispatch('userStore/getRoles');
     await this.$store.dispatch('userStore/getAdmins');
   },
   computed: {
@@ -206,7 +199,7 @@ export default {
       }
     },
     getRoles() {
-      const roles = this.$store.getters['userStore/getroles'];
+      const roles = ['SUPERADMIN', 'VENDOR'];
       return roles;
     },
     editAdmin(adminData) {
@@ -223,7 +216,7 @@ export default {
       this.user = {
         name: '',
         email: '',
-        permissions: [],
+        permissions: '',
       };
     },
     async handleAddAdmin() {
@@ -239,7 +232,7 @@ export default {
         this.user = {
           name: '',
           email: '',
-          permissions: [],
+          permissions: '',
         };
       } catch (err) {
         this.$notify({
@@ -262,7 +255,7 @@ export default {
         this.user = {
           name: '',
           email: '',
-          permissions: [],
+          permissions: '',
         };
       } catch (err) {
         this.$notify({

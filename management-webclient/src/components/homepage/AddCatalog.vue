@@ -307,7 +307,7 @@ export default {
       // defaults of product.
       this.product = _.assignIn(this.product, this.data);
       // this.product = _.cloneDeep(this.data);
-      this.product.tariff = this.product.tariff._id;
+      // this.product.tariff = this.product.tariff._id;
     }
   },
   data() {
@@ -334,11 +334,11 @@ export default {
           // 'https://s3.amazonaws.com/veniqa-catalog-images/6948edbc43110f0828169a5119e4f0f88436658c/thumbnails/910f997478edfa6f1d444169371f1d3149f6113f',
         ],
         details_html: 'A limited-edition illuminating powder with an ultra-smooth formula and radiant finish.',
-        colors: [
-          { name: 'Black', hexValue: '#000000' },
-          { name: 'Brown', hexValue: '#435ADF' }
-        ],
-        sizes: ['XS', 'S', 'M', 'L']
+        // colors: [
+        //   { name: 'Black', hexValue: '#000000' },
+        //   { name: 'Brown', hexValue: '#435ADF' }
+        // ],
+        // sizes: ['XS', 'S', 'M', 'L']
       },
 
       showManagePhoto: false,
@@ -479,9 +479,15 @@ export default {
         //   this.imageUploadComplete(saveImageRes);
         //   // this.preassignedUrls = null;
         // }
-        console.log(this.product);
+        // console.log(this.product);
 
         await this.$store.dispatch('adminStore/addProduct', this.product);
+        
+        this.$notify({
+          group: 'all',
+          type: 'success',
+          text: 'Success on creating new product.'
+        });
         this.$emit('cancelTrigger');
       } catch (err) {
         // if (err) this.preassignedUrls = null;
@@ -496,23 +502,30 @@ export default {
       if (!this.validateForm()) return;
 
       // Check if there are any images.
-      const totalImages = this.$refs.managephoto.configureParams().numberOfThumbnailAndDetailedImages;
-      if (totalImages <= 0) {
+      // const totalImages = this.$refs.managephoto.configureParams().numberOfThumbnailAndDetailedImages;
+      // if (totalImages <= 0) {
+      //   this.$notify({
+      //     group: 'all',
+      //     type: 'warn',
+      //     text: 'You need to upload at least 1 image.'
+      //   });
+      //   return;
+      // }
+      try {
+        // const saveImageRes = await this.$refs.managephoto.saveAll();
+        // if (saveImageRes) {
+        //   this.imageUploadComplete(saveImageRes);
+        //   // this.preassignedUrls = null;
+        // }
+        // console.log(this.product);
+        await this.$store.dispatch('adminStore/editProduct', this.product);
+        
         this.$notify({
           group: 'all',
-          type: 'warn',
-          text: 'You need to upload at least 1 image.'
+          type: 'success',
+          text: 'Success on updating product.'
         });
-        return;
-      }
-      try {
-        const saveImageRes = await this.$refs.managephoto.saveAll();
-        if (saveImageRes) {
-          this.imageUploadComplete(saveImageRes);
-          // this.preassignedUrls = null;
-        }
-        await this.$store.dispatch('adminStore/editProduct', this.product);
-        this.$store.commit('adminStore/resetProducts');
+        // this.$store.commit('adminStore/resetProducts');
         this.$emit('cancelTrigger');
       } catch (err) {
         // if (err) this.preassignedUrls = err;

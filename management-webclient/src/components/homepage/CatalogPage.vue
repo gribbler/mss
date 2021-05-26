@@ -39,6 +39,7 @@
               />
             </b-col>
           </b-row>
+          <!-- Search Bar -->
           <div>
             <div class="row">
               <div class="col-sm-6 align-left">
@@ -51,7 +52,7 @@
               </div>
             </div>
           </div>
-
+          <!-- Result Table -->
           <table class="table table-striped" id="content_loop" style="margin-top: 10px">
             <thead>
               <tr>
@@ -81,9 +82,9 @@
 
                 <td>{{product.name}}</td>
                 <td>{{product.store_sku?product.store_sku:'11111'}}</td>
-                <td>$ {{ getBestPrice(product._id) }}</td>
+                <td>$ {{ product.bestPrice?product.bestPrice:0 }}</td>
 
-                <td>{{ getInStock(product._id) }}</td>
+                <td>{{ product.inStocks?product.inStocks:0 }}</td>
                 <td>
                   <a @click="editProductFunc(product._id)" >
                     <i class="fa fa-edit" style="color:green"></i>
@@ -133,25 +134,24 @@ export default {
   },
   async created() {
     try {
-      await this.$store.dispatch('adminStore/getAllProducts');
       await this.$store.dispatch('adminStore/getReferenceData');
+      await this.$store.dispatch('adminStore/getAllProducts');
+      await this.$store.dispatch('adminStore/getAllSaleProducts');
     } catch (error) {
       this.$router.push('/login');
     }
   },
   computed: {
-    products() {
-      return this.$store.getters['adminStore/allProducts'];
-    },
-
     ...mapGetters({
       pagination: 'adminStore/pagination',
+      products:'adminStore/allProducts'
     }),
   },
   methods: {
     async pageChanged(pageNum) {
       this.pagination.page = pageNum;
       await this.$store.dispatch('adminStore/getAllProducts');
+      await this.$store.dispatch('adminStore/getAllSaleProducts');
     },
 
     async pageLimitChanged(limit) {
@@ -165,21 +165,8 @@ export default {
       this.isAddView = true;
       this.editProductData = null;
     },
-    async getBestPrice(id) {
-      return this.$store.dispatch(
-        'adminStore/getBestPrice',
-        id,
-      );
-      // console.log(bestPrice);
-      // return bestPrice.price;
-    },
-    async getInStock(id) {
-      return this.$store.dispatch(
-        'adminStore/getInStock',
-        id,
-      );
-    },
     async editProductFunc(id) {
+      // console.log(id);
       const editProductDetails = await this.$store.dispatch(
         'adminStore/getProduct',
         id,

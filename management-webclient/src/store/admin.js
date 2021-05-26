@@ -10,8 +10,8 @@ export default {
     priceProduct: [],
     vendors: [],
     categories: [],
-    subcategories: [],
-    refDataPayload: [],
+    // subcategories: [],
+    // refDataPayload: [],
     pagination: _.cloneDeep(Pagination),
     sortBy: '-active',
   },
@@ -93,6 +93,7 @@ export default {
 
         if (data && data.httpStatus === 200) {
           dispatch('getAllProducts');
+          dispatch('getAllSaleProducts');
         } else throw new Error('No Content');
       } catch (err) {
         console.log(err);
@@ -278,47 +279,6 @@ export default {
         throw new Error(err);
       }
     },
-    async getBestPrice({
-      dispatch
-    },id){
-      try {
-        const {
-          data,
-        } = await Vue.prototype.$axios({
-          url: ProxyUrl.getBestPrice,
-          withCredentials: true,
-          method: 'post',
-          data:{
-            id : id,
-          }
-        });
-        return data.responseData.price;
-      } catch (err) {
-        console.log(err);
-        throw new Error(err);
-      }
-    },
-    async getInStock({
-      dispatch
-    },id){
-      try {
-        const {
-          data,
-        } = await Vue.prototype.$axios({
-          url: ProxyUrl.getInStock,
-          withCredentials: true,
-          method: 'post',
-          data:{
-            id : id,
-          }
-        });
-        return data.responseData.stock;
-      } catch (err) {
-        console.log(err);
-        throw new Error(err);
-      }
-    },
-
   },
 
   mutations: {
@@ -345,6 +305,8 @@ export default {
     setSaleProducts(state, payload) {
       state.priceProduct = [];
       state.priceProduct.push(...payload);
+
+      // get product name from products
       for (let i = 0; i < state.priceProduct.length; i++) {
         state.products.forEach(product => {
           if (product._id === state.priceProduct[i].productID) {
@@ -352,26 +314,48 @@ export default {
           }
         });
       }
+
+      // set best price and instock
+      for(let i = 0; i < state.products.length; i++) {
+        // console.log(i+'th value is');
+        state.products[i].bestPrice = Math.min.apply(Math, state.priceProduct.map(function(o) {
+          if((o.inSale===true)&&(state.products[i]._id===o.productID)) {
+            // console.log(o.price.Little.value);
+            return o.price.Little.value;
+           }
+          else return 0; })
+          .filter(Boolean)
+          );
+        if(state.products[i].bestPrice === Infinity) state.products[i].bestPrice = 0;
+        // console.log('total is '+state.products[i].bestPrice);
+        state.products[i].inStocks = state.priceProduct.reduce(function(pre, cur) {
+            // console.log(cur.inSale, cur.inStock);
+           if((cur.inSale===true)&&(state.products[i]._id===cur.productID)) return pre + cur.inStock;
+           else return pre;
+        },0);
+      }
+      // console.log(state.products);
     },
     setProducts(state, payload) {
       state.products = [];
       state.products.push(...payload);
     },
     setRefData(state, payload) {
-      state.vendors = payload.vendors || [];
-      state.priceProduct = payload.priceProduct || [];
-      state.categories = [];
-      state.categories = payload.product_categories;
-      state.refDataPayload = payload || {};
-      state.subcategories = [];
+      // state.vendors = payload.vendors || [];
+      // state.products = payload.products || [];
+      // state.priceProduct = payload.priceProduct || [];
+      // state.categories = [];
+      state.categories = payload.product_categories || [];
+      // state.refDataPayload = payload || {};
+      // state.subcategories = [];
       // set product name in priceProduct.
-      for (let i = 0; i < state.priceProduct.length; i++) {
-        state.products.forEach(product => {
-          if (product._id === state.priceProduct[i].productID) {
-            state.priceProduct[i].productName = product.name;
-          }
-        });
-      }
+      // for (let i = 0; i < state.priceProduct.length; i++) {
+      //   state.products.forEach(product => {
+      //     if (product._id === state.priceProduct[i].productID) {
+      //       state.priceProduct[i].productName = product.name;
+      //     }
+      //   });
+      // }
     },
   },
   getters: {

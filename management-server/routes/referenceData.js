@@ -20,20 +20,20 @@ router.get('/getRoles', referenceDataController.getRoles);
 
 router.get('/getWeightUnits', referenceDataController.getWeightUnits);
 
-router.get('/productCategoryList', passportAuth.canViewCategories, referenceDataController.getProductCategoryList);
+router.get('/productCategoryList', referenceDataController.getProductCategoryList);
 
-router.post('/productCategory', passportAuth.canManageCategories, referenceDataController.addProductCategory);
+router.post('/productCategory', referenceDataController.addProductCategory);
 
-router.get('/productCategory', passportAuth.canViewCategories, referenceDataController.getProductCategory);
+router.get('/productCategory', referenceDataController.getProductCategory);
 
-router.put('/productCategory', passportAuth.canManageCategories, referenceDataController.updateProductCategory);
+router.put('/productCategory', referenceDataController.updateProductCategory);
 
-router.get('/tariffList', passportAuth.canViewTariff, referenceDataController.getTariffList);
+router.get('/tariffList', referenceDataController.getTariffList);
 
-router.post('/tariff', passportAuth.canManageTariff, referenceDataController.addTariffCategory);
+router.post('/tariff', referenceDataController.addTariffCategory);
 
-router.get('/tariff', passportAuth.canViewTariff, referenceDataController.getTariffCategory);
+router.get('/tariff', referenceDataController.getTariffCategory);
 
-router.put('/tariff', passportAuth.canManageTariff, referenceDataController.updateTariffCategory);
+router.put('/tariff', referenceDataController.updateTariffCategory);
 
 module.exports = router;

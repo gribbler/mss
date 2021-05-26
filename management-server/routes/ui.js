@@ -10,12 +10,12 @@ router.get('/', function(req, res, next) {
 
 router.use(passportAuth.isAuthenticated);
 
-router.post('/featured', passportAuth.canManageFeatured, uiController.updateOrUpsertFeaturedSection);
+router.post('/featured', uiController.updateOrUpsertFeaturedSection);
 
-router.get('/featuredList', passportAuth.canViewFeatured, uiController.getAllFeaturedSections);
+router.get('/featuredList', uiController.getAllFeaturedSections);
 
-router.get('/featured', passportAuth.canViewFeatured, uiController.getFeaturedSection);
+router.get('/featured', uiController.getFeaturedSection);
 
-router.delete('/featured', passportAuth.canManageFeatured, uiController.deleteFeaturedSection);
+router.delete('/featured', uiController.deleteFeaturedSection);
 
 module.exports = router;

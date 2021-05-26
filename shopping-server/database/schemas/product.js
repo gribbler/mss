@@ -4,20 +4,14 @@ import validator from 'validator';
 import config from 'config';
 import * as _ from 'lodash';
 
-import weightSchema from './weight';
-import priceSchema from './price';
+// import weightSchema from './weight';
+// import priceSchema from './price';
 import auditLogSchema from './auditLog';
-import customizationOptions from './customizationOptions';
+// import customizationOptions from './customizationOptions';
 
-import STORES_ARRAY from '../reference-data-files/stores.json';
+// import STORES_ARRAY from '../reference-data-files/stores.json';
 
 let productSchema = new mongoose.Schema({
-    store: {
-        type: String,
-        required: true,
-        trim: true,
-        enum: STORES_ARRAY
-    },
     brand: {
         type: String,
         required: true,
@@ -27,14 +21,6 @@ let productSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true
-    },
-    item_url: {
-        type: String,
-        required: true,
-        trim: true,
-        validate: (value) => {
-            return validator.isURL(value, {allow_underscores: true})
-        }
     },
     store_sku: {
         type: String,
@@ -49,7 +35,6 @@ let productSchema = new mongoose.Schema({
     thumbnailUrls: {
         type: Array,
         of: String,
-        required: true,
         validate: (value) => {
             for (let entry of value) {
                 if(!(validator.isURL(entry, {allow_underscores: true}) && entry.includes("s3.amazonaws.com"))) {
@@ -62,7 +47,6 @@ let productSchema = new mongoose.Schema({
     featuredImageUrls: {
         type: Array,
         of: String,
-        required: true,
         validate: (value) => {
             for (let entry of value) {
                 if(!(validator.isURL(entry, {allow_underscores: true}) && entry.includes("s3.amazonaws.com"))) {
@@ -75,7 +59,6 @@ let productSchema = new mongoose.Schema({
     detailedImageUrls: {
         type: Array,
         of: String,
-        required: true,
         validate: (value) => {
             for (let entry of value) {
                 if(!(validator.isURL(entry, {allow_underscores: true}) && entry.includes("s3.amazonaws.com"))) {
@@ -85,40 +68,10 @@ let productSchema = new mongoose.Schema({
             return true;
         }
     },
-    marked_price: {
-        type: priceSchema,
-        required: false
-    },
-    price: {
-        type: priceSchema,
-        required: true
-    },
-    weight: {
-        type: weightSchema,
-        required: true
-    },
-    tariff: {
-        type: Schema.Types.ObjectId,
-        ref: config.get('mongodb_collections.tariff_rates'),
-        required: true
-    },
-    customizationOptions: {
-        type: customizationOptions,
-        required: false
-    },
-    custom_attributes: {
-        type:  ,
-        of: String
-    },
     details_html: {
         type: String,
         required: true,
         trim: true
-    },
-    active: {
-        type: Boolean,
-        required: true,
-        default: true
     },
     auditLog: {
         type: auditLogSchema,
@@ -126,6 +79,6 @@ let productSchema = new mongoose.Schema({
     }
 });
 
-productSchema.index({store: 'text', brand: 'text', name: 'text', store_sku: 'text', details_html: 'text'});
+productSchema.index({ brand: 'text', name: 'text', store_sku: 'text', details_html: 'text'});
 
 module.exports = productSchema;

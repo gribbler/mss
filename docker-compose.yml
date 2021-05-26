@@ -30,7 +30,7 @@ services:
       - './shopping-server:/app'
       - '/app/node_modules'
     ports:
-      - 4201:3000
+      - 4201:4201
     depends_on: 
       - mongo
       - redis
@@ -54,7 +54,7 @@ services:
       - './management-server:/app'
       - '/app/node_modules'
     ports:
-      - 4202:3000
+      - 4202:4202
     depends_on: 
       - mongo
       - redis
@@ -78,7 +78,7 @@ services:
       - './shopping-webclient:/app'
       - '/app/node_modules'
     ports:
-      - 5201:4200
+      - 5201:5201
     
   management-webclient:
     build:
@@ -88,7 +88,7 @@ services:
       - './management-webclient:/app'
       - '/app/node_modules'
     ports:
-      - 5202:4200
+      - 5202:5202
 
 volumes:
   dbdata:

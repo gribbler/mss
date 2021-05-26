@@ -75,7 +75,7 @@
 
         <!-- Zip Code -->
         <b-form-group horizontal :label-cols="2" label="Zip Code" label-for="zipcode">
-          <b-row>            
+          <b-row>
             <b-col sm="2">
               <button
                 type="button"
@@ -95,7 +95,7 @@
           </b-modal>
 
         </b-form-group>
-        
+
       </div>
 
       <div class="form-group">
@@ -140,16 +140,15 @@ export default {
       // Assign in assigns the values from data to product. This helps reduce the undefined errors by keeping the
       // defaults of product.
       this.product = _.assignIn(this.product, this.pData);
-    }
-    else{
+    } else {
       this.product = _.assignIn(this.product, this.data.product);
     }
 
     this.showZipCode = false;
 
     this.editZipcodeData = {
-      czipCode:'',
-      radius:''
+      czipCode: '',
+      radius: ''
     };
   },
   computed: {
@@ -158,17 +157,17 @@ export default {
         showAttributes: false,
         showZipCode: false,
         product: {
-          productName: this.refproductName[0].name,   
+          productName: this.refproductName[0].name,
           price: 1,
           inStock: 1,
           ZipCodes: [{
-            czipCode:'',
-            radius:''
+            czipCode: '',
+            radius: ''
           }],
         },
         editZipcodeData: {
-            czipCode:'',
-            radius:''
+          czipCode: '',
+          radius: ''
         }
       };
     },
@@ -207,21 +206,21 @@ export default {
       );
     },
     cancelZipCode() {
-      console.log('msg from cancel')
+      console.log('msg from cancel');
       this.showZipCode = false;
     },
 
     saveZipCode(zipCode) {
-      console.log('msg from save '+this.showZipCode);
+      console.log(`msg from save ${this.showZipCode}`);
       this.product.ZipCodes.push(zipCode);
       this.showZipCode = false;
     },
-    addZipCode() {  // add by ysd.
+    addZipCode() { // add by ysd.
       this.editZipcodeData = {
-            czipCode: '',
-            radius: ''
-        };
-      console.log('msg from addZipCode ' + this.showZipCode);
+        czipCode: '',
+        radius: ''
+      };
+      console.log(`msg from addZipCode ${this.showZipCode}`);
       this.showZipCode = true;
     },
     goBack() {

@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import logger from '../logging/logger';
 
 const checkPermissions = (req, res, validPermissions, done) => {
-    const found = req.user.permissions.some(permission => validPermissions.includes(permission));
+    const found = (req.user.permissions === validPermissions);
     if (found) {
         done();
     }
@@ -101,57 +101,57 @@ export default {
 
     isSuperAdmin(req, res, done) {
         // Validate if admin is a superadmin, otherwise return a 401
-        const validPermissions = ['SUPERADMIN'];
+        const validPermissions = 'SUPERADMIN';
         return checkPermissions(req, res, validPermissions, done);
     },
 
-    canManageCatalog(req, res, done) {
-        let validPermissions = ['SUPERADMIN', 'CATALOG_MANAGE'];
-        return checkPermissions(req, res, validPermissions, done);
-    },
+    // canManageCatalog(req, res, done) {
+    //     let validPermissions = ['SUPERADMIN', 'CATALOG_MANAGE'];
+    //     return checkPermissions(req, res, validPermissions, done);
+    // },
 
-    canViewCatalog(req, res, done) {
-        let validPermissions = ['SUPERADMIN', 'CATALOG_MANAGE', 'CATALOG_VIEW'];
-        return checkPermissions(req, res, validPermissions, done);
-    },
+    // canViewCatalog(req, res, done) {
+    //     let validPermissions = ['SUPERADMIN', 'CATALOG_MANAGE', 'CATALOG_VIEW'];
+    //     return checkPermissions(req, res, validPermissions, done);
+    // },
 
-    canManageOrders(req, res, done) {
-        let validPermissions = ['SUPERADMIN', 'ORDER_MANAGE'];
-        return checkPermissions(req, res, validPermissions, done);
-    },
+    // canManageOrders(req, res, done) {
+    //     let validPermissions = ['SUPERADMIN', 'ORDER_MANAGE'];
+    //     return checkPermissions(req, res, validPermissions, done);
+    // },
 
-    canViewOrders(req, res, done) {
-        let validPermissions = ['SUPERADMIN', 'ORDER_MANAGE', 'ORDER_VIEW'];
-        return checkPermissions(req, res, validPermissions, done);
-    },
+    // canViewOrders(req, res, done) {
+    //     let validPermissions = ['SUPERADMIN', 'ORDER_MANAGE', 'ORDER_VIEW'];
+    //     return checkPermissions(req, res, validPermissions, done);
+    // },
 
-    canViewTariff(req, res, done) {
-        const validPermissions = ['SUPERADMIN', 'TARIFF_VIEW', 'TARIFF_MANAGE'];
-        return checkPermissions(req, res, validPermissions, done);
-    },
+    // canViewTariff(req, res, done) {
+    //     const validPermissions = ['SUPERADMIN', 'TARIFF_VIEW', 'TARIFF_MANAGE'];
+    //     return checkPermissions(req, res, validPermissions, done);
+    // },
 
-    canManageTariff(req, res, done) {
-        const validPermissions = ['SUPERADMIN', 'TARIFF_MANAGE'];
-        return checkPermissions(req, res, validPermissions, done);
-    },
+    // canManageTariff(req, res, done) {
+    //     const validPermissions = ['SUPERADMIN', 'TARIFF_MANAGE'];
+    //     return checkPermissions(req, res, validPermissions, done);
+    // },
 
-    canViewCategories(req, res, done) {
-        const validPermissions = ['SUPERADMIN', 'CATEGORIES_VIEW', 'CATEGORIES_MANAGE'];
-        return checkPermissions(req, res, validPermissions, done);
-    },
+    // canViewCategories(req, res, done) {
+    //     const validPermissions = ['SUPERADMIN', 'CATEGORIES_VIEW', 'CATEGORIES_MANAGE'];
+    //     return checkPermissions(req, res, validPermissions, done);
+    // },
 
-    canManageCategories(req, res, done) {
-        const validPermissions = ['SUPERADMIN', 'CATEGORIES_MANAGE'];
-        return checkPermissions(req, res, validPermissions, done);
-    },
+    // canManageCategories(req, res, done) {
+    //     const validPermissions = ['SUPERADMIN', 'CATEGORIES_MANAGE'];
+    //     return checkPermissions(req, res, validPermissions, done);
+    // },
 
-    canViewFeatured(req, res, done) {
-        const validPermissions = ['SUPERADMIN', 'FEATURED_MANAGE', 'FEATURED_VIEW', 'FEATURED_PREVIEW'];
-        return checkPermissions(req, res, validPermissions, done);
-    },
+    // canViewFeatured(req, res, done) {
+    //     const validPermissions = ['SUPERADMIN', 'FEATURED_MANAGE', 'FEATURED_VIEW', 'FEATURED_PREVIEW'];
+    //     return checkPermissions(req, res, validPermissions, done);
+    // },
 
-    canManageFeatured(req, res, done) {
-        const validPermissions = ['SUPERADMIN', 'FEATURED_MANAGE'];
-        return checkPermissions(req, res, validPermissions, done);
-    }
+    // canManageFeatured(req, res, done) {
+    //     const validPermissions = ['SUPERADMIN', 'FEATURED_MANAGE'];
+    //     return checkPermissions(req, res, validPermissions, done);
+    // }
 }
