@@ -30,7 +30,7 @@ services:
       - './shopping-server:/app'
       - '/app/node_modules'
     ports:
-      - 4201:4201
+      - 4201:3000
     depends_on: 
       - mongo
       - redis
@@ -54,7 +54,7 @@ services:
       - './management-server:/app'
       - '/app/node_modules'
     ports:
-      - 4202:4202
+      - 4202:3000
     depends_on: 
       - mongo
       - redis
